@@ -35,7 +35,7 @@ class GenerateJsonSchemaCommand extends ContainerAwareCommand
                 'php'
             )
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command generates schemas from doctrine entities. 
+The <info>%command.name%</info> command generates schemas from doctrine entities.
 If a schema already exists for the provided entity, it'll be merged with the existing schema as a base (this will not override anything).
 
 You can specify the directory where php files are available with the -d option:
@@ -85,14 +85,15 @@ EOF
                 $ns = $prefix;
 
                 $title = $file->getBasename('.php');
-                $class = $ns.'\\'.$title;
+                $subdir = substr($file->getPath(),strlen($dir));
+                $class = strtr(sprintf('%s%s/%s',$ns,$subdir,$title), '/', '\\');
 
-                $directory = sprintf('%s/%s', $schemaPath, $bundle->getName());
+                $directory = sprintf('%s/%s%s', $schemaPath, $bundle->getName(), $subdir);
                 $schema = sprintf('%s/%s.json', $directory, $title);
                 $existingSchema = null;
 
                 if (!is_dir($directory)) {
-                    mkdir($directory);
+                    mkdir($directory, 0770, true);
                     $output->writeln(sprintf('<info>Directory %s has been created</info>', $directory));
                 }
 
