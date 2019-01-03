@@ -20,9 +20,16 @@ services:
     json_schema.reflection_extractor:
         class: 'Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor'
 
+    json_schema.php_doc_extractor:
+        class: 'Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor'
+
     json_schema.property_info_extractor:
         class: 'Symfony\Component\PropertyInfo\PropertyInfoExtractor'
-        arguments: [['@json_schema.reflection_extractor'], ['@json_schema.reflection_extractor'], [], ['@json_schema.reflection_extractor']]
+        arguments: 
+            - ['@json_schema.reflection_extractor'] # LIST
+            - ['@json_schema.reflection_extractor'] # TYPE
+            - ['@json_schema.php_doc_extractor'] # DESCRIPTION
+            - ['@json_schema.reflection_extractor'] # ACCESS
 
     json_schema.php_strategy:
         class: 'Soyuka\JsonSchemaBundle\Strategy\PhpStrategy'
